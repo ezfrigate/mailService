@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd" >
+    <context:annotation-config />
+
+<context:component-scan base-package="com.se.dces.cmm.mail" />
+
+<bean id = "springTemplateEngine" class = "com.se.dces.cmm.mail.ThymeleafConfig" />
+<bean id = "htmlTemplateResolver" class = "com.se.dces.cmm.mail.ThymeleafConfig" />
+
+<!-- Mail Configuration -->
+   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    	<property name="host" value="10.195.132.49"/>
+    	<property name="port" value="25" />
+    	<property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">false</prop>
+                <prop key="mail.debug">true</prop>
+        		<prop key="mail.debug.auth">true</prop>
+            </props>
+        </property>
+</bean>  
+<!-- Spring Email Attachment Configuration -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- Maximum Upload Size In Bytes -->
+        <property name="maxUploadSize" value="20971520" />
+        <!-- Maximum Size Of File In Memory (In Bytes) -->
+        <property name="maxInMemorySize" value="1048576" />
+    </bean>
+   
+<!-- Resolves Views Selected For Rendering by @Controllers to *.jsp Resources in the /WEB-INF/ Folder -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    
+<!-- Send Email Exception Resolver i.e. In Case Of Exception The Controller Will Navigate To 'error.jsp' & Will Display The Exception Message -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">error</prop>
+			</props>
+		</property>
+	</bean>	
+
+</beans>
